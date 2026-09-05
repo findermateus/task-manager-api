@@ -86,9 +86,9 @@ public class TaskEntity
 
     public void Cancel()
     {
-        if (Status != TaskStatus.Pending && Status != TaskStatus.InProgress)
+        if (Status == TaskStatus.Canceled)
         {
-            throw new InvalidTaskStateException("Only pending or in-progress tasks can be canceled.");
+            throw new InvalidTaskStateException("Task already cancelled.");
         }
 
         Status = TaskStatus.Canceled;

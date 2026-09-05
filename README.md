@@ -10,7 +10,7 @@ O projeto é construído em .NET, utilizando ASP.NET Core Web API para expor os 
 
 Pré-requisitos:
 
-- .NET SDK 10 instalado (versão definida em `global.json`)
+- .NET SDK 10 instalado
 
 Passos, a partir da raiz do repositório:
 
