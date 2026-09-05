@@ -1,0 +1,14 @@
+﻿using Microsoft.EntityFrameworkCore;
+using task_mananger_api.Domain.Entities;
+using task_mananger_api.Domain.Interfaces;
+using task_mananger_api.Infrastructure.Persistence;
+
+namespace task_mananger_api.Infrastructure.Repositories;
+
+public class TaskRepository(AppDbContext context) : ITaskRepository
+{
+    public async Task<List<TaskEntity>> GetAllAsync()
+    {
+        return await context.Tasks.ToListAsync();
+    }
+}

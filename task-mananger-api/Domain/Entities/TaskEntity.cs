@@ -2,7 +2,7 @@
 
 namespace task_mananger_api.Domain.Entities;
 
-public class Task
+public class TaskEntity
 {
     public int Id { get; private set; }
     public string Title { get; private set; }
@@ -12,7 +12,7 @@ public class Task
     public DateTime? CompletedAt { get; private set; }
     public TaskStatus Status { get; private set; }
 
-    public Task(string title, string description, DateOnly expectedConclusionDate)
+    public TaskEntity(string title, string description, DateOnly expectedConclusionDate)
     {
         if (string.IsNullOrWhiteSpace(title))
         {
