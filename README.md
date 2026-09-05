@@ -51,3 +51,25 @@ O projeto segue uma separação em camadas:
 As regras de negócio que são violadas lançam exceções de domínio, representadas pela classe base `DomainException` (`Domain/Exceptions/DomainException.cs`) e suas especializações (`InvalidTaskDataException`, `InvalidTaskStateException`, `TaskNotFoundException`).
 
 Essas exceções são capturadas por um `DomainExceptionFilter` (`Infrastructure/ExceptionHandling/DomainExceptionFilter.cs`), aplicado ao controller, que as converte em uma resposta HTTP com o status code e a mensagem de erro apropriados. Esse filtro é implementado a partir do mecanismo de filtros de exceção do ASP.NET Core (`IExceptionFilter`), documentado em: https://learn.microsoft.com/pt-br/dotnet/api/microsoft.aspnetcore.mvc.filters.exceptionfilterattribute?view=aspnetcore-10.0
+
+## Regras de negócio implementadas
+
+As regras abaixo estão implementadas em `Domain/Entities/TaskEntity.cs` (a entidade é responsável por proteger seu próprio estado) e são acionadas pelos endpoints de `Controllers/TaskController.cs`:
+
+- **Título obrigatório**: uma tarefa não pode ser criada nem atualizada com título vazio ou apenas espaços em branco (`POST /tasks` e `PUT /tasks/{id}`). Violação lança `InvalidTaskDataException` (HTTP 400).
+- **Data prevista de conclusão não pode ser anterior à data atual**: validado tanto na criação quanto na atualização, comparando a data informada com a data atual (UTC). Violação lança `InvalidTaskDataException` (HTTP 400).
+- **Status restrito a um conjunto fechado de valores**: `Pendente`, `Em andamento`, `Concluída` e `Cancelada` (enum `TaskStatus`). O status não é um campo editável livremente — só muda através dos endpoints dedicados (`/start`, `/complete`, `/cancel`), o que evita que a API receba um status inválido ou arbitrário.
+- **Transições de status controladas**:
+  - `PATCH /tasks/{id}/start`: só é permitido iniciar tarefas que estejam `Pendente`. Caso contrário, lança `InvalidTaskStateException` (HTTP 409).
+  - `PATCH /tasks/{id}/complete`: só é permitido completar tarefas `Pendente` ou `Em andamento`. Caso contrário, lança `InvalidTaskStateException` (HTTP 409).
+  - `PATCH /tasks/{id}/cancel`: uma tarefa já `Cancelada` não pode ser cancelada novamente (`InvalidTaskStateException`, HTTP 409). Tarefas em qualquer outro status, incluindo `Concluída`, podem ser canceladas — essa foi uma decisão consciente, já que o enunciado não veda esse caso.
+- **Uma tarefa concluída não pode voltar para "Pendente"**: como o status só é alterado pelos endpoints acima e não existe nenhuma operação que leve uma tarefa de volta a `Pendente`, essa regra é garantida por construção (não há um "des-complete").
+- **Data de conclusão registrada automaticamente**: ao completar uma tarefa (`/complete`), o campo `CompletedAt` é preenchido com a data/hora atual (UTC) pela própria entidade.
+- **Tarefa inexistente**: qualquer operação sobre um ID que não existe (`GET /tasks/{id}`, `PUT`, `DELETE`, `/start`, `/complete`, `/cancel`) lança `TaskNotFoundException` (HTTP 404).
+
+## O que eu melhoraria se tivesse mais tempo
+
+- Autenticação (para restringir quem pode criar/alterar tarefas).
+- Paginação e filtros no `GET /tasks` (por status, por período de conclusão prevista, etc.).
+- Empacotar tudo em um `docker-compose.yml`, subindo a API junto de um MySQL ou MariaDB no lugar do SQLite.
+- Um log de auditoria (quem criou/alterou/cancelou cada tarefa e quando), possivelmente em MongoDB.
