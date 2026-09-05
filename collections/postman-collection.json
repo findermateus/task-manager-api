@@ -1,0 +1,197 @@
+{
+  "info": {
+    "name": "TaskManagerApiCollection",
+    "description": null,
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Tasks",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Create Task",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Tarefa que será excluída\",\n  \"description\": \"Descrição da Tarefa\",\n  \"expectedConclusionDate\": \"2026-10-15\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "Start Task",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks/1/start",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks",
+            "1",
+            "start"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Get Task By Id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks/3",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks",
+            "3"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Cancel Task",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks/1/cancel",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks",
+            "1",
+            "cancel"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Complete Task",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks/2/complete",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks",
+            "2",
+            "complete"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Delete Task",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks/3",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks",
+            "3"
+          ],
+          "query": [],
+          "variable": []
+        }
+      }
+    },
+    {
+      "name": "Update Task",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "description": "",
+        "url": {
+          "raw": "http://localhost:5161/tasks/2",
+          "protocol": "http",
+          "host": [
+            "localhost:5161"
+          ],
+          "path": [
+            "tasks",
+            "2"
+          ],
+          "query": [],
+          "variable": []
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Tarefa Atualizada\",\n  \"description\": \"Descrição da Tarefa Atualizada\",\n  \"expectedConclusionDate\": \"2026-10-15\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "variable": []
+}
