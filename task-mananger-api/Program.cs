@@ -12,12 +12,23 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=tasks.db"));
 
 builder.Services.AddControllers();
+builder.Services.AddProblemDetails();
 
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<GetAllTasks>();
 builder.Services.AddScoped<CreateTask>();
+builder.Services.AddScoped<StartTask>();
+builder.Services.AddScoped<GetTaskById>();
+builder.Services.AddScoped<CancelTask>();
+builder.Services.AddScoped<CompleteTask>();
+builder.Services.AddScoped<DeleteTask>();
+builder.Services.AddScoped<UpdateTask>();
 
 var app = builder.Build();
+
+app.UseExceptionHandler();
+app.UseStatusCodePages();
+
 app.MapControllers();
 
 if (app.Environment.IsDevelopment())

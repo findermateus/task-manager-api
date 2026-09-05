@@ -46,6 +46,28 @@ public class TaskEntity
         return new TaskEntity(payload.Title, payload.Description, payload.ExpectedConclusionDate);
     }
 
+    public void Update(UpdateTaskDto payload)
+    {
+        if (string.IsNullOrWhiteSpace(payload.Title))
+        {
+            throw new ArgumentException("Title cannot be empty.", nameof(payload));
+        }
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        if (payload.ExpectedConclusionDate < today)
+        {
+            throw new ArgumentException(
+                "Expected conclusion date cannot be earlier than today.",
+                nameof(payload)
+            );
+        }
+
+        Title = payload.Title;
+        Description = payload.Description;
+        ExpectedConclusionDate = payload.ExpectedConclusionDate;
+    }
+
     public void Start()
     {
         if (Status != TaskStatus.Pending)

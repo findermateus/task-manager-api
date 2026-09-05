@@ -12,11 +12,28 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
         return await context.Tasks.ToListAsync();
     }
 
+    public TaskEntity? GetById(int id)
+    {
+        return context.Tasks.FirstOrDefault(t => t.Id == id);
+    }
+
     public TaskEntity Create(TaskEntity task)
     {
         var saved = context.Tasks.Add(task);
         context.SaveChanges();
 
         return saved.Entity;
+    }
+
+    public void Update(TaskEntity task)
+    {
+        context.Tasks.Update(task);
+        context.SaveChanges();
+    }
+
+    public void Delete(TaskEntity task)
+    {
+        context.Tasks.Remove(task);
+        context.SaveChanges();
     }
 }
