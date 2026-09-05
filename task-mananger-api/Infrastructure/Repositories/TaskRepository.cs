@@ -11,4 +11,12 @@ public class TaskRepository(AppDbContext context) : ITaskRepository
     {
         return await context.Tasks.ToListAsync();
     }
+
+    public TaskEntity Create(TaskEntity task)
+    {
+        var saved = context.Tasks.Add(task);
+        context.SaveChanges();
+
+        return saved.Entity;
+    }
 }

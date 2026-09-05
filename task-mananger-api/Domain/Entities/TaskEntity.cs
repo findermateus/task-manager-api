@@ -1,4 +1,6 @@
-﻿using TaskStatus = task_mananger_api.Domain.Enum.TaskStatus;
+﻿using task_mananger_api.DTOs;
+using TaskStatus = task_mananger_api.Domain.Enum.TaskStatus;
+using System.Text.Json.Serialization;
 
 namespace task_mananger_api.Domain.Entities;
 
@@ -10,6 +12,8 @@ public class TaskEntity
     public DateTime CreatedAt { get; private set; }
     public DateOnly ExpectedConclusionDate { get; private set; }
     public DateTime? CompletedAt { get; private set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter<TaskStatus>))]
     public TaskStatus Status { get; private set; }
 
     public TaskEntity(string title, string description, DateOnly expectedConclusionDate)
@@ -19,11 +23,27 @@ public class TaskEntity
             throw new ArgumentException("Title cannot be empty.", nameof(title));
         }
 
+        var utcNow = DateTime.UtcNow;
+        var today = DateOnly.FromDateTime(utcNow);
+
+        if (expectedConclusionDate < today)
+        {
+            throw new ArgumentException(
+                "Expected conclusion date cannot be earlier than today.",
+                nameof(expectedConclusionDate)
+            );
+        }
+
         Title = title;
         Description = description;
         ExpectedConclusionDate = expectedConclusionDate;
-        CreatedAt = DateTime.UtcNow;
+        CreatedAt = utcNow;
         Status = TaskStatus.Pending;
+    }
+
+    public static TaskEntity FromPayload(CreateTaskDto payload)
+    {
+        return new TaskEntity(payload.Title, payload.Description, payload.ExpectedConclusionDate);
     }
 
     public void Start()
