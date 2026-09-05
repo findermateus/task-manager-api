@@ -1,4 +1,5 @@
-﻿using task_mananger_api.DTOs;
+﻿using task_mananger_api.Domain.Exceptions;
+using task_mananger_api.DTOs;
 using TaskStatus = task_mananger_api.Domain.Enum.TaskStatus;
 using System.Text.Json.Serialization;
 
@@ -20,7 +21,7 @@ public class TaskEntity
     {
         if (string.IsNullOrWhiteSpace(title))
         {
-            throw new ArgumentException("Title cannot be empty.", nameof(title));
+            throw new InvalidTaskDataException("Title cannot be empty.");
         }
 
         var utcNow = DateTime.UtcNow;
@@ -28,10 +29,7 @@ public class TaskEntity
 
         if (expectedConclusionDate < today)
         {
-            throw new ArgumentException(
-                "Expected conclusion date cannot be earlier than today.",
-                nameof(expectedConclusionDate)
-            );
+            throw new InvalidTaskDataException("Expected conclusion date cannot be earlier than today.");
         }
 
         Title = title;
@@ -50,17 +48,14 @@ public class TaskEntity
     {
         if (string.IsNullOrWhiteSpace(payload.Title))
         {
-            throw new ArgumentException("Title cannot be empty.", nameof(payload));
+            throw new InvalidTaskDataException("Title cannot be empty.");
         }
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
         if (payload.ExpectedConclusionDate < today)
         {
-            throw new ArgumentException(
-                "Expected conclusion date cannot be earlier than today.",
-                nameof(payload)
-            );
+            throw new InvalidTaskDataException("Expected conclusion date cannot be earlier than today.");
         }
 
         Title = payload.Title;
@@ -72,7 +67,7 @@ public class TaskEntity
     {
         if (Status != TaskStatus.Pending)
         {
-            throw new InvalidOperationException("Only pending tasks can be started.");
+            throw new InvalidTaskStateException("Only pending tasks can be started.");
         }
 
         Status = TaskStatus.InProgress;
@@ -82,7 +77,7 @@ public class TaskEntity
     {
         if (Status != TaskStatus.Pending && Status != TaskStatus.InProgress)
         {
-            throw new InvalidOperationException("Only pending or in-progress tasks can be completed.");
+            throw new InvalidTaskStateException("Only pending or in-progress tasks can be completed.");
         }
 
         Status = TaskStatus.Completed;
@@ -93,7 +88,7 @@ public class TaskEntity
     {
         if (Status != TaskStatus.Pending && Status != TaskStatus.InProgress)
         {
-            throw new InvalidOperationException("Only pending or in-progress tasks can be canceled.");
+            throw new InvalidTaskStateException("Only pending or in-progress tasks can be canceled.");
         }
 
         Status = TaskStatus.Canceled;

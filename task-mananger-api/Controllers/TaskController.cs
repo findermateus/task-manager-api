@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using task_mananger_api.Domain.UseCases;
 using task_mananger_api.DTOs;
+using task_mananger_api.Infrastructure.ExceptionHandling;
 
 namespace task_mananger_api.Controllers;
 
 [ApiController]
+[TypeFilter<DomainExceptionFilter>]
 [Route("tasks")]
 public class TasksController(
     GetAllTasks getAllTasks,
@@ -37,11 +39,6 @@ public class TasksController(
     {
         var taskEntity = getTaskById.Execute(id);
 
-        if (taskEntity is null)
-        {
-            return NotFound();
-        }
-
         return Ok(taskEntity);
     }
 
@@ -49,11 +46,6 @@ public class TasksController(
     public IActionResult Start(int id)
     {
         var result = startTask.Execute(id);
-
-        if (result is null)
-        {
-            return NotFound();
-        }
 
         return Ok(result);
     }
@@ -63,11 +55,6 @@ public class TasksController(
     {
         var result = cancelTask.Execute(id);
 
-        if (result is null)
-        {
-            return NotFound();
-        }
-
         return Ok(result);
     }
 
@@ -76,23 +63,13 @@ public class TasksController(
     {
         var result = completeTask.Execute(id);
 
-        if (result is null)
-        {
-            return NotFound();
-        }
-
         return Ok(result);
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var result = deleteTask.Execute(id);
-
-        if (result is null)
-        {
-            return NotFound();
-        }
+        deleteTask.Execute(id);
 
         return NoContent();
     }
@@ -101,11 +78,6 @@ public class TasksController(
     public IActionResult Update(int id, UpdateTaskDto payload)
     {
         var result = updateTask.Execute(id, payload);
-
-        if (result is null)
-        {
-            return NotFound();
-        }
 
         return Ok(result);
     }
