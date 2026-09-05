@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task-mananger-api", "task-mananger-api\task-mananger-api.csproj", "{1AA33E99-62E0-47D8-B609-CDFB68BEAE54}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "task-manager-api", "task-manager-api\task-manager-api.csproj", "{1AA33E99-62E0-47D8-B609-CDFB68BEAE54}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
